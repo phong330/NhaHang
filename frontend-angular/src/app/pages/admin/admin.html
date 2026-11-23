@@ -1,0 +1,482 @@
+<div class="admin-wrapper" [class.dark]="cheDoToi">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">🍽️</span>
+      <span class="logo-text">Phương Nam<br><small>Quản trị</small></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button (click)="tab='dashboard'" [class.active]="tab==='dashboard'" class="nav-item">
+        <span class="nav-icon">📊</span> Dashboard
+      </button>
+      <button (click)="tab='datban'" [class.active]="tab==='datban'" class="nav-item">
+        <span class="nav-icon">📅</span> Quản lý Đặt bàn
+      </button>
+      <button (click)="tab='ban'" [class.active]="tab==='ban'" class="nav-item">
+        <span class="nav-icon">🪑</span> Quản lý Bàn ăn
+      </button>
+      <button (click)="tab='monan'" [class.active]="tab==='monan'" class="nav-item">
+        <span class="nav-icon">🍜</span> Quản lý Thực đơn
+      </button>
+      <button *ngIf="auth.laAdmin()" (click)="tab='taikhoan';taiTaiKhoan()" [class.active]="tab==='taikhoan'" class="nav-item">
+        <span class="nav-icon">👥</span> Tài khoản
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-info">
+        <span class="admin-avatar">{{ tenAdmin.charAt(0) }}</span>
+        <div>
+          <div class="admin-name">{{ tenAdmin }}</div>
+          <div class="admin-role">{{ auth.laAdmin() ? 'Quản trị viên' : 'Nhân viên' }}</div>
+        </div>
+      </div>
+      <button (click)="cheDoToi=!cheDoToi" class="btn-toggle-dark" title="Chế độ tối">
+        {{ cheDoToi ? '☀️' : '🌙' }}
+      </button>
+      <button (click)="dangXuat()" class="btn-logout">Đăng xuất</button>
+    </div>
+  </aside>
+
+  <!-- ===== NỘI DUNG CHÍNH ===== -->
+  <main class="main-content">
+
+    <!-- ===== TAB DASHBOARD ===== -->
+    <div *ngIf="tab==='dashboard'">
+      <div class="page-header">
+        <h1 class="page-title">📊 Dashboard</h1>
+        <span class="page-sub">Tổng quan hệ thống nhà hàng</span>
+      </div>
+
+      <div *ngIf="dangTai" class="loading-box">
+        <div class="spinner"></div> Đang tải dữ liệu...
+      </div>
+
+      <div *ngIf="!dangTai">
+        <!-- Stat cards -->
+        <div class="stat-grid">
+          <div class="stat-card stat-blue">
+            <div class="stat-icon">📅</div>
+            <div class="stat-body">
+              <div class="stat-val">{{ thongKe.tongDatBan || 0 }}</div>
+              <div class="stat-lbl">Tổng đặt bàn</div>
+            </div>
+          </div>
+          <div class="stat-card stat-green">
+            <div class="stat-icon">🕐</div>
+            <div class="stat-body">
+              <div class="stat-val">{{ thongKe.datBanHomNay || 0 }}</div>
+              <div class="stat-lbl">Đặt bàn hôm nay</div>
+            </div>
+          </div>
+          <div class="stat-card stat-orange">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-body">
+              <div class="stat-val">{{ thongKe.choDuyet || 0 }}</div>
+              <div class="stat-lbl">Chờ xác nhận</div>
+            </div>
+          </div>
+          <div class="stat-card stat-red">
+            <div class="stat-icon">🪑</div>
+            <div class="stat-body">
+              <div class="stat-val">{{ thongKe.banTrong || 0 }}</div>
+              <div class="stat-lbl">Bàn đang trống</div>
+            </div>
+          </div>
+          <div class="stat-card stat-gold">
+            <div class="stat-icon">💰</div>
+            <div class="stat-body">
+              <div class="stat-val">{{ formatGia(thongKe.tongDoanhThuCoc || 0) }}</div>
+              <div class="stat-lbl">Doanh thu cọc</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Biểu đồ doanh thu theo tháng -->
+        <div class="chart-box">
+          <div class="chart-header">
+            <h2 class="section-title">📈 Doanh thu cọc theo tháng (Năm {{ namHienTai }})</h2>
+            <span class="chart-subtitle">Đơn vị: VNĐ</span>
+          </div>
+          <div *ngIf="doanhThuThang.length === 0" class="empty-state">Chưa có dữ liệu</div>
+          <div class="bar-chart" *ngIf="doanhThuThang.length > 0">
+            <div class="bar-item" *ngFor="let m of doanhThuThang">
+              <div class="bar-val" *ngIf="m.doanhThu > 0">{{ formatGiaNgan(m.doanhThu) }}</div>
+              <div class="bar-col">
+                <div class="bar-fill"
+                  [class.bar-has-val]="m.doanhThu > 0"
+                  [style.height.px]="m.doanhThu > 0 ? (m.doanhThu / maxDoanhThu * 140) : 4"
+                  [title]="'Tháng ' + m.thang + ': ' + formatGia(m.doanhThu)">
+                </div>
+              </div>
+              <div class="bar-label" [class.bar-label-active]="m.doanhThu > 0">T{{ m.thang }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB ĐẶT BÀN ===== -->
+    <div *ngIf="tab==='datban'">
+      <div class="page-header">
+        <h1 class="page-title">📅 Quản lý Đặt bàn</h1>
+      </div>
+
+      <!-- Bộ lọc -->
+      <div class="filter-bar">
+        <input type="date" [(ngModel)]="ngayLocDon" (change)="locDonTheoNgay()" class="inp" placeholder="Lọc theo ngày đến">
+        <input type="text" [(ngModel)]="tuKhoa" class="inp" placeholder="🔍 Tìm mã đặt bàn, tên khách, bàn, SĐT...">
+        <button (click)="ngayLocDon='';tuKhoa='';taiDonDatBan()" class="btn-ghost">✕ Xoá lọc</button>
+        <div class="nhom-nut-xuat-admin">
+          <button (click)="xuatExcelDonDatBan()" class="btn-xuat-excel" title="Xuất file Excel (.xlsx) chuẩn OpenXML, mở trực tiếp xem ngay không cảnh báo">
+            📊 Xuất Excel ({{ dsDonLoc.length }})
+          </button>
+        </div>
+      </div>
+
+      <!-- Bảng đặt bàn -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Mã đặt bàn</th>
+              <th>Khách hàng</th>
+              <th>SĐT</th>
+              <th>Bàn</th>
+              <th>Ngày đến</th>
+              <th>Số người</th>
+              <th>Trạng thái</th>
+              <th>Cọc</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let don of dsDonLoc">
+              <td><code class="ma-dat-ban">{{ don.maDatBan }}</code></td>
+              <td>{{ don.hoTenKhach || don.taiKhoanId }}</td>
+              <td>{{ don.sdtKhach || don.soDienThoai || '—' }}</td>
+              <td>{{ don.tenBan || don.banAnId }}</td>
+              <td>{{ don.ngayDen }}</td>
+              <td class="text-center">{{ don.soNguoi }}</td>
+              <td>
+                <span [class]="'badge-tt ' + mauTrangThai(don.trangThai)">
+                  <span class="tt-dot"></span>
+                  {{ tenTrangThai(don.trangThai) }}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="don.trangThaiCoc==='DaThanhToan'" class="badge-tt da-thanh-toan">
+                  <span class="tt-dot"></span> Đã cọc
+                </span>
+                <span *ngIf="don.trangThaiCoc==='KhongCanCoc'" class="badge-tt khong-can-coc">
+                  <span class="tt-dot"></span> Không cọc
+                </span>
+                <span *ngIf="don.trangThaiCoc!=='DaThanhToan' && don.trangThaiCoc!=='KhongCanCoc'" class="badge-tt chua-coc">
+                  <span class="tt-dot"></span> {{ formatGia(don.tienCoc) }}
+                </span>
+              </td>
+              <td>
+                <select [(ngModel)]="don.trangThai" (change)="capNhatTrangThaiDon(don)" class="inp-sm">
+                  <option *ngFor="let tt of cacTrangThaiDon" [value]="tt">{{ tenTrangThai(tt) }}</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="dsDonLoc.length === 0" class="empty-state">Không có đơn đặt bàn nào</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB BÀN ĂN ===== -->
+    <div *ngIf="tab==='ban'">
+      <div class="page-header">
+        <h1 class="page-title">🪑 Quản lý Bàn ăn</h1>
+      </div>
+
+      <!-- Form thêm/sửa bàn -->
+      <div class="form-card">
+        <h2 class="form-title">{{ dangSuaBan ? '✏️ Chỉnh sửa bàn' : '➕ Thêm bàn mới' }}</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tên bàn *</label>
+            <input type="text" [(ngModel)]="formBan.tenBan" class="inp" placeholder="Vd: Bàn VIP 01">
+          </div>
+          <div class="form-group">
+            <label>Khu vực / Loại bàn</label>
+            <select [(ngModel)]="formBan.loai" class="inp">
+              <option value="KhuA">🏛️ Khu vực A</option>
+              <option value="KhuB">🌿 Khu vực B</option>
+              <option value="VIP">👑 Khu VIP</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Sức chứa (người)</label>
+            <input type="number" [(ngModel)]="formBan.sucChua" class="inp" min="1" max="50">
+          </div>
+          <div class="form-group">
+            <label>Tiền cọc (đ)</label>
+            <input type="number" [(ngModel)]="formBan.tienCoc" class="inp" min="0">
+          </div>
+          <div class="form-group form-full">
+            <label>Hình ảnh (URL)</label>
+            <input type="text" [(ngModel)]="formBan.hinh" class="inp" placeholder="https://...">
+          </div>
+          <div class="form-group form-full">
+            <label>Mô tả</label>
+            <textarea [(ngModel)]="formBan.moTa" class="inp" rows="2" placeholder="Mô tả bàn..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button (click)="luuBan()" class="btn-chinh">{{ dangSuaBan ? '💾 Cập nhật' : '➕ Thêm bàn' }}</button>
+          <button *ngIf="dangSuaBan" (click)="batDauThemBan()" class="btn-ghost">✕ Hủy sửa</button>
+        </div>
+      </div>
+
+      <!-- Danh sách bàn -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Hình</th>
+              <th>Tên bàn</th>
+              <th>Loại</th>
+              <th>Sức chứa</th>
+              <th>Tiền cọc</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ban of dsBanAn; let i=index">
+              <td>{{ i+1 }}</td>
+              <td>
+                <img *ngIf="ban.hinh" [src]="ban.hinh" alt="ảnh bàn" class="thumb" (error)="$any($event.target).src='https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80'">
+                <span *ngIf="!ban.hinh">🪑</span>
+              </td>
+              <td><strong>{{ ban.tenBan }}</strong></td>
+              <td><span class="tag tag-loai">{{ tenLoaiBan(ban.loai) }}</span></td>
+              <td class="text-center">{{ ban.sucChua }} người</td>
+              <td>{{ formatGia(ban.tienCoc) }}</td>
+              <td>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                  <span [class]="'badge-tt ' + mauTrangThaiBan(ban.trangThai)" style="font-size:11px; padding:2px 7px;">
+                    <span class="tt-dot"></span>
+                    {{ tenTrangThaiBan(ban.trangThai) }}
+                  </span>
+                  <select [(ngModel)]="ban.trangThai" (change)="doiTrangThaiBan(ban)" class="inp-sm">
+                    <option value="Trong">Trống</option>
+                    <option value="DaDat">Đã đặt</option>
+                    <option value="DangPhucVu">Đang sử dụng</option>
+                    <option value="BaoDuong">Đang bảo trì</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <button (click)="batDauSuaBan(ban)" class="btn-edit">✏️ Sửa</button>
+                <button (click)="xoaBan(ban.id)" class="btn-del">🗑️ Xóa</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="dsBanAn.length===0" class="empty-state">Chưa có bàn nào</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB THỰC ĐƠN ===== -->
+    <div *ngIf="tab==='monan'">
+      <div class="page-header">
+        <h1 class="page-title">🍜 Quản lý Thực đơn</h1>
+      </div>
+
+      <!-- Form thêm/sửa món -->
+      <div class="form-card">
+        <h2 class="form-title">{{ dangSuaMon ? '✏️ Chỉnh sửa món ăn' : '➕ Thêm món mới' }}</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tên món *</label>
+            <input type="text" [(ngModel)]="formMon.tenMon" class="inp" placeholder="Vd: Gà nướng mật ong">
+          </div>
+          <div class="form-group">
+            <label>Danh mục</label>
+            <select [(ngModel)]="formMon.danhMuc" class="inp">
+              <option value="KhaiVi">Khai vị</option>
+              <option value="MonChinh">Món chính</option>
+              <option value="HaiSan">Hải sản</option>
+              <option value="MonChay">Món chay</option>
+              <option value="DoUong">Đồ uống</option>
+              <option value="TrangMieng">Tráng miệng</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Giá (đ) *</label>
+            <input type="number" [(ngModel)]="formMon.gia" class="inp" min="0" placeholder="150000">
+          </div>
+          <div class="form-group">
+            <label>Hình ảnh (URL)</label>
+            <input type="text" [(ngModel)]="formMon.hinh" class="inp" placeholder="https://...">
+          </div>
+          <div class="form-group form-full">
+            <label>Mô tả</label>
+            <textarea [(ngModel)]="formMon.moTa" class="inp" rows="2" placeholder="Mô tả ngắn về món..."></textarea>
+          </div>
+          <div class="form-group form-checkbox-row">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formMon.noiBat"> ⭐ Món nổi bật
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formMon.conHang"> ✅ Còn hàng
+            </label>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button (click)="luuMon()" class="btn-chinh">{{ dangSuaMon ? '💾 Cập nhật' : '➕ Thêm món' }}</button>
+          <button *ngIf="dangSuaMon" (click)="batDauThemMon()" class="btn-ghost">✕ Hủy sửa</button>
+        </div>
+      </div>
+
+      <!-- Lọc theo danh mục -->
+      <div class="tab-pills">
+        <button *ngFor="let dm of cacDanhMucMon" (click)="danhMucLocMon=dm.key;locMonTheoMuc()"
+          [class.active]="danhMucLocMon===dm.key" class="pill">{{ dm.ten }}</button>
+      </div>
+
+      <!-- Bảng món ăn -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Hình</th>
+              <th>Tên món</th>
+              <th>Danh mục</th>
+              <th>Giá</th>
+              <th>Nổi bật</th>
+              <th>Còn hàng</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mon of dsMonAn; let i=index">
+              <td>{{ i+1 }}</td>
+              <td>
+                <img *ngIf="mon.hinh" [src]="mon.hinh" alt="ảnh món" class="thumb" (error)="$any($event.target).src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'">
+                <span *ngIf="!mon.hinh">🍽️</span>
+              </td>
+              <td><strong>{{ mon.tenMon }}</strong><br><small class="text-muted">{{ mon.moTa | slice:0:40 }}...</small></td>
+              <td><span class="tag">{{ tenDanhMuc(mon.danhMuc) }}</span></td>
+              <td class="price-col">{{ formatGia(mon.gia) }}</td>
+              <td class="text-center">
+                <span *ngIf="mon.noiBat" class="badge-icon">⭐</span>
+                <span *ngIf="!mon.noiBat" class="text-muted">—</span>
+              </td>
+              <td class="text-center">
+                <span *ngIf="mon.conHang" class="badge-tt con-mon" style="font-size:11px;">
+                  <span class="tt-dot"></span> Còn món
+                </span>
+                <span *ngIf="!mon.conHang" class="badge-tt het-mon" style="font-size:11px;">
+                  <span class="tt-dot"></span> Hết món
+                </span>
+              </td>
+              <td>
+                <button (click)="batDauSuaMon(mon)" class="btn-edit">✏️ Sửa</button>
+                <button (click)="xoaMon(mon.id)" class="btn-del">🗑️ Xóa</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="dsMonAn.length===0" class="empty-state">Chưa có món ăn nào</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB TÀI KHOẢN (chỉ Admin) ===== -->
+    <div *ngIf="tab==='taikhoan' && auth.laAdmin()">
+      <div class="page-header">
+        <h1 class="page-title">👥 Quản lý Tài khoản & Phân quyền</h1>
+      </div>
+
+      <!-- Form Thêm / Sửa tài khoản -->
+      <div class="form-card">
+        <h2 class="form-title">{{ dangSuaTaiKhoan ? '✏️ Chỉnh sửa tài khoản' : '➕ Tạo tài khoản mới' }}</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Họ và tên *</label>
+            <input type="text" [(ngModel)]="formTaiKhoan.hoTen" class="inp" placeholder="Vd: Nguyễn Văn A">
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" [(ngModel)]="formTaiKhoan.email" [disabled]="dangSuaTaiKhoan" class="inp" placeholder="email@domain.com">
+          </div>
+          <div class="form-group">
+            <label>Số điện thoại</label>
+            <input type="tel" [(ngModel)]="formTaiKhoan.soDienThoai" class="inp" placeholder="0901234567">
+          </div>
+          <div class="form-group" *ngIf="!dangSuaTaiKhoan">
+            <label>Mật khẩu</label>
+            <input type="password" [(ngModel)]="formTaiKhoan.matKhau" class="inp" placeholder="Mặc định: 123456">
+          </div>
+          <div class="form-group">
+            <label>Phân quyền (Vai trò)</label>
+            <select [(ngModel)]="formTaiKhoan.vaiTro" class="inp">
+              <option value="Customer">Customer (Khách hàng)</option>
+              <option value="Staff">Staff (Nhân viên)</option>
+              <option value="Admin">Admin (Quản trị viên)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button (click)="luuTaiKhoan()" class="btn-chinh">{{ dangSuaTaiKhoan ? '💾 Cập nhật' : '➕ Tạo tài khoản' }}</button>
+          <button *ngIf="dangSuaTaiKhoan" (click)="batDauThemTaiKhoan()" class="btn-ghost">✕ Hủy sửa</button>
+        </div>
+      </div>
+
+      <!-- Bảng danh sách tài khoản -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Họ tên</th>
+              <th>Email</th>
+              <th>SĐT</th>
+              <th>Vai trò (Phân quyền)</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tk of dsTaiKhoan; let i=index">
+              <td>{{ i+1 }}</td>
+              <td><strong>{{ tk.hoTen }}</strong></td>
+              <td>{{ tk.email }}</td>
+              <td>{{ tk.soDienThoai || '—' }}</td>
+              <td>
+                <select [ngModel]="tk.vaiTro" (ngModelChange)="doiVaiTro(tk, $event)" class="inp-sm" [disabled]="tk.email === emailAdmin">
+                  <option value="Customer">Khách hàng</option>
+                  <option value="Staff">Nhân viên</option>
+                  <option value="Admin">Quản trị viên</option>
+                </select>
+              </td>
+              <td>
+                <span class="badge-tt" [class.hoat-dong]="tk.trangThai !== 'BiKhoa'" [class.bi-khoa]="tk.trangThai === 'BiKhoa'" style="font-size:11px;">
+                  <span class="tt-dot"></span>
+                  {{ tk.trangThai === 'BiKhoa' ? 'Bị khóa' : 'Hoạt động' }}
+                </span>
+              </td>
+              <td>
+                <button (click)="batDauSuaTaiKhoan(tk)" class="btn-edit">✏️ Sửa</button>
+                <button *ngIf="tk.email !== emailAdmin" (click)="doiTrangThaiKhoa(tk)" class="btn-del" [style.background]="tk.trangThai==='BiKhoa' ? '#E5F5EC' : ''" [style.color]="tk.trangThai==='BiKhoa' ? '#2D4439' : ''">
+                  {{ tk.trangThai === 'BiKhoa' ? '🔓 Mở khóa' : '🔒 Khóa' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="dsTaiKhoan.length===0" class="empty-state">Chưa có tài khoản nào</div>
+      </div>
+    </div>
+
+  </main>
+</div>

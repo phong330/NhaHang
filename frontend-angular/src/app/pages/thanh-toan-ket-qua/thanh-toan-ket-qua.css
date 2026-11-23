@@ -1,0 +1,104 @@
+.trang-ket-qua {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F7FBF9;
+  padding: 24px;
+}
+.hop-ket-qua { 
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 48px 40px;
+  text-align: center; 
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(64, 92, 80, 0.06); 
+  border: 1.5px solid #E3EDE7; 
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.icon-ket-qua {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+.hop-ket-qua h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.thanh-cong h1 {
+  color: #2D6A4F;
+}
+.that-bai h1 {
+  color: #DC2626;
+}
+.hop-ket-qua p {
+  color: #71847A;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.ma-dat-ban-hien {
+  background: #E5F5EC;
+  border: 1.5px solid #CDEFE0;
+  border-radius: 10px;
+  padding: 16px 24px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.ma-dat-ban-hien span {
+  color: #71847A;
+  font-size: .9rem;
+}
+.ma-dat-ban-hien strong {
+  color: #2D4439;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+.ghi-chu-kq {
+  font-size: .85rem;
+  color: #71847A;
+}
+.ma-loi {
+  color: #DC2626;
+  font-size: .85rem;
+}
+.nhom-nut-kq {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.nut-xem-lich-su {
+  background: #CDEFE0;
+  color: #2D4439;
+  border: 1.5px solid #A7DEC4;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all .2s;
+  box-shadow: 0 2px 8px rgba(64, 92, 80, 0.08);
+}
+.nut-xem-lich-su:hover {
+  background: #BFEAD5;
+  transform: translateY(-1px);
+}
+.nut-ve-trangchu {
+  background: #FFFFFF;
+  color: #1D4E89;
+  border: 1.5px solid #8FBCE3;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all .2s;
+}
+.nut-ve-trangchu:hover {
+  background: #B8D8F2;
+  color: #123866;
+}

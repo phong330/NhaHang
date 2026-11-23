@@ -1,0 +1,191 @@
+<div class="staff-wrapper">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">🍽️</span>
+      <span class="logo-text">Phương Nam<br><small>Nghiệp vụ</small></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button (click)="tab='datban'" [class.active]="tab==='datban'" class="nav-item">
+        <span class="nav-icon">📅</span> Đặt bàn
+      </button>
+      <button (click)="tab='banan';taiBanAn()" [class.active]="tab==='banan'" class="nav-item">
+        <span class="nav-icon">🪑</span> Sơ đồ bàn
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-info">
+        <span class="admin-avatar">{{ tenNhanVien.charAt(0) }}</span>
+        <div>
+          <div class="admin-name">{{ tenNhanVien }}</div>
+          <div class="admin-role">Nhân viên</div>
+        </div>
+      </div>
+      <button (click)="dangXuat()" class="btn-logout">Đăng xuất</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TAB ĐẶT BÀN -->
+    <div *ngIf="tab==='datban'">
+      <div class="page-header">
+        <h1 class="page-title">📅 Quản lý Đặt bàn</h1>
+      </div>
+
+      <div class="filter-bar">
+        <input type="date" [(ngModel)]="ngayLocDon" (change)="locDonTheoNgay()" class="inp" placeholder="Lọc theo ngày đến">
+        <input type="text" [(ngModel)]="tuKhoa" class="inp" placeholder="🔍 Tìm mã đặt bàn, tên khách, bàn, SĐT...">
+        <button (click)="ngayLocDon='';tuKhoa='';taiDonDatBan()" class="btn-ghost">✕ Xoá lọc</button>
+        <button (click)="xuatExcel()" class="btn-xuat-excel" style="margin-left:auto;" title="Xuất file Excel danh sách đặt bàn">
+          📊 Xuất Excel ({{ dsDonLoc.length }})
+        </button>
+      </div>
+
+      <div *ngIf="dangTai" class="loading-box">⏳ Đang tải...</div>
+
+      <div class="table-wrap" *ngIf="!dangTai">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Mã đặt bàn</th>
+              <th>Khách hàng</th>
+              <th>Bàn</th>
+              <th>Thời gian đến</th>
+              <th>Khách</th>
+              <th>Cọc</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let don of dsDonLoc">
+              <td><strong>{{ don.maDatBan }}</strong></td>
+              <td>{{ don.hoTenKhach }}<br><small>{{ don.sdtKhach }}</small></td>
+              <td>{{ don.tenBan }}<br><small class="tag">{{ don.loaiBan }}</small></td>
+              <td>{{ don.ngayDen }}</td>
+              <td>{{ don.soNguoi }} người</td>
+              <td>
+                <span style="font-weight:700;">{{ formatGia(don.tienCoc) }}</span><br>
+                <span [class]="'badge-tt ' + (don.trangThaiCoc==='DaThanhToan' ? 'da-thanh-toan' : don.trangThaiCoc==='KhongCanCoc' ? 'khong-can-coc' : 'chua-coc')" style="font-size:10px; padding:2px 7px; margin-top:3px;">
+                  <span class="tt-dot"></span>
+                  {{ don.trangThaiCoc==='DaThanhToan' ? 'Đã cọc' : don.trangThaiCoc==='KhongCanCoc' ? 'Không cọc' : 'Chưa cọc' }}
+                </span>
+              </td>
+              <td>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                  <span [class]="'badge-tt ' + mauTrangThai(don.trangThai)" style="font-size:10px; padding:2px 7px;">
+                    <span class="tt-dot"></span>
+                    {{ tenTrangThai(don.trangThai) }}
+                  </span>
+                  <select [(ngModel)]="don.trangThai" (change)="capNhatTrangThaiDon(don)" class="inp-sm">
+                    <option *ngFor="let tt of cacTrangThaiDon" [value]="tt">{{ tenTrangThai(tt) }}</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <button (click)="xemChiTiet(don)" class="btn-ghost" style="padding:4px 8px;font-size:12px;">👁️ Chi tiết</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="dsDonLoc.length===0" class="empty-state">Không có đơn nào phù hợp</div>
+      </div>
+    </div>
+
+    <!-- MODAL CHI TIẾT ĐƠN ĐẶT BÀN -->
+    <div class="overlay-modal" *ngIf="hienChiTiet" (click)="dongChiTiet()">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>📋 Chi tiết đặt bàn: {{ chiTietDon?.maDatBan }}</h3>
+          <button (click)="dongChiTiet()" class="btn-close">✕</button>
+        </div>
+        <div class="modal-body" *ngIf="chiTietDon">
+          <div class="info-row">
+            <strong>Trạng thái đơn:</strong>
+            <span [class]="'badge-tt ' + mauTrangThai(chiTietDon.trangThai)" style="margin-left:6px;">
+              <span class="tt-dot"></span>
+              {{ tenTrangThai(chiTietDon.trangThai) }}
+            </span>
+          </div>
+          <div class="info-row"><strong>👤 Khách hàng:</strong> {{ chiTietDon.hoTenKhach }} (SĐT: {{ chiTietDon.sdtKhach || '—' }} | Email: {{ chiTietDon.emailKhach }})</div>
+          <div class="info-row"><strong>🪑 Bàn:</strong> {{ chiTietDon.tenBan }} ({{ tenLoaiBan(chiTietDon.loaiBan) }} · Sức chứa {{ chiTietDon.sucChua }} người)</div>
+          <div class="info-row"><strong>⏰ Thời gian đến:</strong> {{ chiTietDon.ngayDen }}</div>
+          <div class="info-row"><strong>👥 Số người:</strong> {{ chiTietDon.soNguoi }} khách</div>
+          <div class="info-row">
+            <strong>💰 Tiền cọc:</strong> {{ formatGia(chiTietDon.tienCoc) }}
+            <span [class]="'badge-tt ' + (chiTietDon.trangThaiCoc === 'DaThanhToan' ? 'da-thanh-toan' : chiTietDon.trangThaiCoc === 'KhongCanCoc' ? 'khong-can-coc' : 'chua-coc')" style="margin-left:6px;">
+              <span class="tt-dot"></span>
+              {{ chiTietDon.trangThaiCoc === 'DaThanhToan' ? 'Đã thanh toán' : chiTietDon.trangThaiCoc === 'KhongCanCoc' ? 'Không cần cọc' : 'Chờ thanh toán' }}
+            </span>
+          </div>
+          <div class="info-row" *ngIf="chiTietDon.ghiChu"><strong>📝 Ghi chú của khách:</strong> {{ chiTietDon.ghiChu }}</div>
+
+          <div class="mon-dat-box" *ngIf="chiTietDon.danhSachMon?.length > 0">
+            <h4>🍽️ Danh sách món đặt trước:</h4>
+            <table class="table-mini">
+              <thead>
+                <tr>
+                  <th>Tên món</th>
+                  <th>SL</th>
+                  <th>Đơn giá</th>
+                  <th>Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let m of chiTietDon.danhSachMon">
+                  <td>{{ m.tenMon }}</td>
+                  <td>{{ m.soLuong }}</td>
+                  <td>{{ formatGia(m.donGia) }}</td>
+                  <td>{{ formatGia(m.thanhTien) }}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" style="text-align:right;font-weight:700;">Tổng tiền món:</td>
+                  <td style="font-weight:700;color:#2D4439;">{{ formatGia(chiTietDon.tongTienMon) }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="empty-state" *ngIf="!chiTietDon.danhSachMon?.length" style="padding:16px;">
+            Khách không đặt món trước.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB SƠ ĐỒ BÀN -->
+    <div *ngIf="tab==='banan'">
+      <div class="page-header">
+        <h1 class="page-title">🪑 Sơ đồ bàn</h1>
+      </div>
+
+      <div class="ban-grid">
+        <div class="ban-card" *ngFor="let ban of dsBanAn" [class]="'ban-card ban-tt-' + ban.trangThai.toLowerCase()">
+          <div class="ban-anh-wrap" *ngIf="ban.hinh">
+            <img [src]="ban.hinh" [alt]="ban.tenBan" loading="lazy" (error)="$any($event.target).src='https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80'">
+          </div>
+          <div class="ban-ten">{{ ban.tenBan }}</div>
+          <div class="ban-loai">{{ tenLoaiBan(ban.loai) }} · {{ ban.sucChua }} chỗ</div>
+          <div class="ban-trangThai">
+            <span [class]="'badge-tt ' + mauTrangThaiBan(ban.trangThai)">
+              <span class="tt-dot"></span>
+              {{ tenTrangThaiBan(ban.trangThai) }}
+            </span>
+          </div>
+          <select [(ngModel)]="ban.trangThai" (change)="doiTrangThaiBan(ban)" class="inp-sm">
+            <option value="Trong">Trống</option>
+            <option value="DaDat">Đã đặt</option>
+            <option value="DangPhucVu">Đang sử dụng</option>
+            <option value="BaoDuong">Đang bảo trì</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>

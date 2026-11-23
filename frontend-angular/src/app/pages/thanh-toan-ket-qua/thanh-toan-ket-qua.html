@@ -1,0 +1,33 @@
+<div class="trang-ket-qua">
+  <!-- THANH CONG -->
+  <div *ngIf="thanhCong" class="hop-ket-qua thanh-cong">
+    <div class="icon-ket-qua">✅</div>
+    <h1>Thanh toán thành công!</h1>
+    <p>Bàn của bạn đã được xác nhận. Chúng tôi rất vui được đón tiếp bạn!</p>
+    <div class="ma-dat-ban-hien" *ngIf="maDatBan">
+      <span>Mã đặt bàn:</span>
+      <strong>{{maDatBan}}</strong>
+    </div>
+    <p class="ghi-chu-kq">Email xác nhận đã được gửi về hộp thư của bạn.</p>
+    <div class="nhom-nut-kq">
+      <a routerLink="/lich-su-dat-ban" class="nut-xem-lich-su">📋 Xem lịch sử đặt bàn</a>
+      <a routerLink="/" class="nut-ve-trangchu">🏠 Về trang chủ</a>
+    </div>
+  </div>
+
+  <!-- THAT BAI -->
+  <div *ngIf="!thanhCong" class="hop-ket-qua that-bai">
+    <div class="icon-ket-qua">❌</div>
+    <h1>Thanh toán thất bại</h1>
+    <p>Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.</p>
+    <div class="ma-dat-ban-hien" *ngIf="maDatBan">
+      <span>Mã đặt bàn:</span>
+      <strong>{{maDatBan}}</strong>
+    </div>
+    <p *ngIf="maLoi" class="ma-loi">Mã lỗi: {{maLoi}}</p>
+    <div class="nhom-nut-kq">
+      <a routerLink="/dat-ban" class="nut-xem-lich-su">🔄 Thử lại</a>
+      <a routerLink="/" class="nut-ve-trangchu">🏠 Về trang chủ</a>
+    </div>
+  </div>
+</div>

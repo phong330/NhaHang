@@ -1,0 +1,516 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== BIEN CSS - MODERN FRESH PASTEL ===== */
+:root {
+  /* 1. Bảng màu chủ đạo theo quy chuẩn */
+  --mau-mint: #CDEFE0;         /* Xanh mint chính */
+  --mau-mint-hover: #BFEAD5;   /* Xanh mint hover */
+  --mau-mint-dam: #A7DEC4;     /* Xanh mint viền / nhấn */
+  --mau-bac-ha: #E5F5EC;       /* Xanh bạc hà nhạt */
+  --mau-duong-pastel: #B8D8F2;  /* Xanh dương pastel mới rõ nét */
+  --mau-duong-nhan: #8FBCE3;    /* Xanh dương nhấn mới */
+  --mau-duong-nhat: #B8D8F2;    /* Tương thích kế thừa */
+  --mau-duong-chu: #1D4E89;     /* Chữ trên nền xanh dương tương phản cao */
+  --mau-lavender: #EAE4F8;     /* Tím lavender nhạt (điểm nhấn nhỏ) */
+  --mau-trang: #FFFFFF;        /* Trắng */
+  --mau-nen: #F7FBF9;          /* Nền trắng xanh */
+  --mau-chu-chinh: #405C50;    /* Chữ chính */
+  --mau-chu-dam: #2D4439;      /* Chữ đậm / Tiêu đề */
+  --mau-chu-phu: #71847A;      /* Chữ phụ */
+  --mau-vien: #E3EDE7;         /* Đường viền pastel */
+
+  /* 2. Biến tương thích kế thừa */
+  --mau-chinh: #CDEFE0;
+  --mau-chinh-dam: #BFEAD5;
+  --mau-toi: #405C50;
+  --mau-xam: #71847A;
+  --mau-xam-nhat: #E3EDE7;
+  --mau-vang: #8FBCE3;
+
+  /* 3. Màu trạng thái pastel */
+  --tt-thanhcong-nen: #E5F5EC;
+  --tt-thanhcong-chu: #2D6A4F;
+  --tt-cho-nen: #FEF3C7;
+  --tt-cho-chu: #92400E;
+  --tt-dangxuly-nen: #B8D8F2;
+  --tt-dangxuly-chu: #1D4E89;
+  --tt-thatbai-nen: #FEE2E2;
+  --tt-thatbai-chu: #DC2626;
+  --tt-hoanthanh-nen: #EAE4F8;
+  --tt-hoanthanh-chu: #6D28D9;
+  --tt-khongkhadung-nen: #E5E7EB;
+  --tt-khongkhadung-chu: #4B5563;
+}
+
+/* ===== RESET CO BAN ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--mau-nen);
+  color: var(--mau-chu-chinh);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--mau-chu-dam);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== NUT CHINH (Xanh mint - Chu xanh dam de doc) ===== */
+.nut-chinh {
+  background-color: var(--mau-mint);
+  color: var(--mau-chu-dam);
+  border: 1.5px solid var(--mau-mint-dam);
+  padding: 0.65rem 1.6rem;
+  border-radius: 8px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 2px 8px rgba(64, 92, 80, 0.08);
+}
+
+.nut-chinh:hover {
+  background-color: var(--mau-mint-hover);
+  border-color: #8FD8B3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(64, 92, 80, 0.15);
+}
+
+.nut-chinh:active {
+  transform: translateY(0);
+}
+
+/* ===== NUT PHU (Nen trang - Vien xanh mint) ===== */
+.nut-phu {
+  background-color: var(--mau-trang);
+  color: var(--mau-chu-chinh);
+  border: 1.5px solid var(--mau-mint-dam);
+  padding: 0.65rem 1.6rem;
+  border-radius: 8px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.nut-phu:hover {
+  background-color: var(--mau-bac-ha);
+  color: var(--mau-chu-dam);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(64, 92, 80, 0.08);
+}
+
+/* ===== NUT PHU PHONG CACH XANH DUONG NHAN ===== */
+.nut-vang {
+  background-color: var(--mau-duong-nhan);
+  color: var(--mau-duong-chu);
+  border: 1.5px solid #7BAED8;
+  padding: 0.65rem 1.6rem;
+  border-radius: 8px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.nut-vang:hover {
+  background-color: #7BAED8;
+  color: #123866;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(143, 188, 227, 0.35);
+}
+
+/* ===== THE CARD ===== */
+.the-card {
+  background-color: var(--mau-trang);
+  border-radius: 12px;
+  border: 1px solid var(--mau-vien);
+  box-shadow: 0 2px 10px rgba(64, 92, 80, 0.04);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+.the-card:hover {
+  box-shadow: 0 8px 24px rgba(64, 92, 80, 0.08);
+  border-color: var(--mau-mint);
+  transform: translateY(-3px);
+}
+
+/* ===== HỆ THỐNG BADGE TRẠNG THÁI CHUẨN ===== */
+.badge-trang-thai,
+.badge-tt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.28rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: all 0.2s ease;
+}
+
+.badge-trang-thai .tt-dot,
+.badge-tt .tt-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* 1. Thành công / Đã xác nhận / Đã thanh toán / Hoạt động / Còn món / Bàn trống: nền #E5F5EC, chữ #2D6A4F */
+.badge-trang-thai.da-xac-nhan,
+.badge-trang-thai.thanh-cong,
+.badge-tt.badge-xacnhan,
+.badge-tt.tt-thanhcong,
+.badge-tt.da-thanh-toan,
+.badge-tt.con-mon,
+.badge-tt.hoat-dong,
+.badge-tt.ban-trong {
+  background-color: #E5F5EC !important;
+  color: #2D6A4F !important;
+  border: 1px solid #CDEFE0 !important;
+}
+.badge-trang-thai.da-xac-nhan .tt-dot,
+.badge-tt.badge-xacnhan .tt-dot,
+.badge-tt.tt-thanhcong .tt-dot,
+.badge-tt.da-thanh-toan .tt-dot,
+.badge-tt.con-mon .tt-dot,
+.badge-tt.hoat-dong .tt-dot,
+.badge-tt.ban-trong .tt-dot {
+  background-color: #2D6A4F !important;
+}
+
+/* 2. Chờ xác nhận / Đang chờ / Chờ duyệt / Chờ thanh toán / Bàn đã đặt: nền #FEF3C7, chữ #92400E */
+.badge-trang-thai.cho-duyet,
+.badge-trang-thai.cho-xac-nhan,
+.badge-tt.badge-cho,
+.badge-tt.tt-cho,
+.badge-tt.chua-thanh-toan,
+.badge-tt.chua-coc,
+.badge-tt.ban-da-dat {
+  background-color: #FEF3C7 !important;
+  color: #92400E !important;
+  border: 1px solid #FDE68A !important;
+}
+.badge-trang-thai.cho-duyet .tt-dot,
+.badge-tt.badge-cho .tt-dot,
+.badge-tt.tt-cho .tt-dot,
+.badge-tt.chua-thanh-toan .tt-dot,
+.badge-tt.chua-coc .tt-dot,
+.badge-tt.ban-da-dat .tt-dot {
+  background-color: #92400E !important;
+}
+
+/* 3. Đang phục vụ / Đang xử lý / Đang ăn: nền #B8D8F2, viền #8FBCE3, chữ #1D4E89 */
+.badge-trang-thai.dang-an,
+.badge-trang-thai.dang-phuc-vu,
+.badge-tt.badge-dangphucvu,
+.badge-tt.tt-dangxuly,
+.badge-tt.dang-an,
+.badge-tt.ban-dang-phuc-vu {
+  background-color: #B8D8F2 !important;
+  color: #1D4E89 !important;
+  border: 1px solid #8FBCE3 !important;
+}
+.badge-trang-thai.dang-an .tt-dot,
+.badge-tt.badge-dangphucvu .tt-dot,
+.badge-tt.tt-dangxuly .tt-dot,
+.badge-tt.dang-an .tt-dot,
+.badge-tt.ban-dang-phuc-vu .tt-dot {
+  background-color: #1D4E89 !important;
+}
+
+/* 4. Đã hoàn thành: nền #EAE4F8, chữ #6D28D9 */
+.badge-trang-thai.hoan-thanh,
+.badge-tt.badge-hoan,
+.badge-tt.tt-hoanthanh,
+.badge-tt.hoan-thanh {
+  background-color: #EAE4F8 !important;
+  color: #6D28D9 !important;
+  border: 1px solid #DDD6FE !important;
+}
+.badge-trang-thai.hoan-thanh .tt-dot,
+.badge-tt.badge-hoan .tt-dot,
+.badge-tt.tt-hoanthanh .tt-dot,
+.badge-tt.hoan-thanh .tt-dot {
+  background-color: #6D28D9 !important;
+}
+
+/* 5. Đã hủy / Thất bại / Bị khóa: nền #FEE2E2, chữ #DC2626 */
+.badge-trang-thai.da-huy,
+.badge-trang-thai.that-bai,
+.badge-tt.badge-huy,
+.badge-tt.tt-thatbai,
+.badge-tt.da-huy,
+.badge-tt.bi-khoa {
+  background-color: #FEE2E2 !important;
+  color: #DC2626 !important;
+  border: 1px solid #FECACA !important;
+}
+.badge-trang-thai.da-huy .tt-dot,
+.badge-tt.badge-huy .tt-dot,
+.badge-tt.tt-thatbai .tt-dot,
+.badge-tt.da-huy .tt-dot,
+.badge-tt.bi-khoa .tt-dot {
+  background-color: #DC2626 !important;
+}
+
+/* 6. Không khả dụng / Hết món / Bảo dưỡng / Không cần cọc: nền #E5E7EB, chữ #4B5563 */
+.badge-trang-thai.het-mon,
+.badge-trang-thai.khong-kha-dung,
+.badge-tt.badge-khongkhadung,
+.badge-tt.tt-khongkhadung,
+.badge-tt.het-mon,
+.badge-tt.bao-duong,
+.badge-tt.khong-can-coc {
+  background-color: #E5E7EB !important;
+  color: #4B5563 !important;
+  border: 1px solid #D1D5DB !important;
+}
+.badge-trang-thai.het-mon .tt-dot,
+.badge-tt.badge-khongkhadung .tt-dot,
+.badge-tt.tt-khongkhadung .tt-dot,
+.badge-tt.het-mon .tt-dot,
+.badge-tt.bao-duong .tt-dot,
+.badge-tt.khong-can-coc .tt-dot {
+  background-color: #4B5563 !important;
+}
+
+/* ===== FORM STYLES ===== */
+.form-nhom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.form-nhan {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mau-chu-dam);
+}
+
+.form-o-nhap {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--mau-vien);
+  border-radius: 8px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.9rem;
+  color: var(--mau-chu-chinh);
+  background-color: var(--mau-trang);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.form-o-nhap:focus {
+  border-color: var(--mau-mint-dam);
+  box-shadow: 0 0 0 3px rgba(205, 239, 224, 0.45);
+}
+
+.form-o-nhap.loi {
+  border-color: #EF4444;
+}
+
+.form-o-nhap::placeholder {
+  color: #9CA3AF;
+}
+
+/* ===== TIEU DE SECTION ===== */
+.tieu-de-section {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.tieu-de-section h2 {
+  font-size: 2rem;
+  color: var(--mau-chu-dam);
+  margin-bottom: 0.5rem;
+}
+
+.tieu-de-section .duong-ke {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #CDEFE0, #8FBCE3, #EAE4F8);
+  margin: 0.5rem auto;
+  border-radius: 2px;
+}
+
+.tieu-de-section p {
+  color: var(--mau-chu-phu);
+  font-size: 1rem;
+}
+
+/* ===== SPINNER ===== */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #E5F5EC;
+  border-top: 3px solid var(--mau-chu-chinh);
+  border-radius: 50%;
+  animation: quay 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes quay {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== HỆ THỐNG HIỆU ỨNG CHUYỂN CẢNH MƯỢT ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.45);
+    opacity: 0.65;
+  }
+}
+
+router-outlet + * {
+  animation: fadeSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  display: block;
+}
+
+.badge-tt.badge-dangphucvu .tt-dot,
+.badge-tt.tt-dangxuly .tt-dot,
+.badge-tt.badge-cho .tt-dot,
+.badge-tt.tt-cho .tt-dot,
+.badge-tt.da-thanh-toan .tt-dot,
+.badge-tt.da-xac-nhan .tt-dot {
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.the-card, .the-mon-an, .the-mon, .the-ban, .the-don, .the-khong-gian, .the-dac-diem, .stat-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.28s ease !important;
+}
+
+.the-card:hover, .the-mon-an:hover, .the-mon:hover, .the-ban:hover, .the-don:hover, .the-khong-gian:hover, .the-dac-diem:hover {
+  transform: translateY(-4px) !important;
+}
+
+.nut-chinh, .nut-phu, .nut-vang, .btn-chinh, .btn-ghost, .btn-logout, .nut-tiep-theo, .nut-xac-nhan, .tab-btn, .pill, .btn-xuat-excel, .nut-xuat-excel {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.nut-chinh:hover, .btn-chinh:hover, .nut-tiep-theo:hover, .nut-xac-nhan:hover, .btn-xuat-excel:hover, .nut-xuat-excel:hover {
+  transform: translateY(-2px);
+}
+
+.nut-chinh:active, .btn-chinh:active, .nut-tiep-theo:active, .nut-xac-nhan:active, .tab-btn:active {
+  transform: scale(0.97) !important;
+}
+
+/* ===== THONG BAO TRONG RONG ===== */
+.trang-thai-trong {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--mau-chu-phu);
+}
+
+.trang-thai-trong .icon-trong {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.trang-thai-trong p {
+  font-size: 1rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .tieu-de-section h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nut-chinh, .nut-phu, .nut-vang {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.88rem;
+  }
+}

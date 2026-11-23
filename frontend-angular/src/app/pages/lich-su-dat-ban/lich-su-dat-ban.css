@@ -1,0 +1,207 @@
+.trang-lich-su {
+  min-height: 100vh;
+  background: #F7FBF9;
+  padding-bottom: 60px;
+}
+.hero-lich-su {
+  background: linear-gradient(135deg, #E5F5EC 0%, #CDEFE0 45%, #B8D8F2 100%);
+  padding: 110px 24px 44px;
+  text-align: center;
+  border-bottom: 1.5px solid #E3EDE7;
+}
+.hero-lich-su h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  color: #2D4439;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.hero-lich-su p {
+  color: #71847A;
+  font-size: 1rem;
+}
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 20px 0;
+}
+
+.thanh-dieu-khien-ls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #FFFFFF;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(64, 92, 80, 0.04);
+  border: 1.5px solid #E3EDE7;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nhom-tab-loc {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  background: #F7FBF9;
+  border: 1.5px solid #E3EDE7;
+  color: #71847A;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tab-btn:hover {
+  background: #E5F5EC;
+  color: #2D4439;
+}
+.tab-btn.active {
+  background: #CDEFE0;
+  border-color: #A7DEC4;
+  color: #2D4439;
+  box-shadow: 0 2px 6px rgba(64, 92, 80, 0.1);
+}
+.nhom-nut-xuat {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.nut-xuat-excel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #CDEFE0;
+  color: #2D4439;
+  border: 1.5px solid #A7DEC4;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(64, 92, 80, 0.08);
+}
+.nut-xuat-excel:hover {
+  background: #BFEAD5;
+  transform: translateY(-1px);
+}
+.trang-tai, .trong-du-lieu {
+  text-align: center;
+  padding: 60px;
+  color: #71847A;
+  font-size: 1.1rem;
+}
+.nut-dat-ngay {
+  display: inline-block;
+  margin-top: 16px;
+  background: #CDEFE0;
+  color: #2D4439;
+  border: 1.5px solid #A7DEC4;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background .2s;
+  box-shadow: 0 2px 8px rgba(64, 92, 80, 0.08);
+}
+.nut-dat-ngay:hover {
+  background: #BFEAD5;
+}
+.the-don { 
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px; 
+  box-shadow: 0 4px 14px rgba(64, 92, 80, 0.04);
+  border: 1.5px solid #E3EDE7;
+  border-left: 5px solid #CDEFE0; 
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.the-don:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(64, 92, 80, 0.08);
+  border-left-color: #A7DEC4;
+}
+.don-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ma-dat-ban {
+  font-weight: 700;
+  color: #2D4439;
+  margin-right: 10px;
+  font-size: 1rem;
+  font-family: monospace;
+  background: #E5F5EC;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid #CDEFE0;
+}
+.thong-tin-don {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px;
+  background: #F7FBF9;
+  border-radius: 8px;
+  border: 1px solid #E3EDE7;
+}
+.dong-tt span {
+  font-size: 0.82rem;
+  color: #71847A;
+  display: block;
+  margin-bottom: 2px;
+}
+.dong-tt strong {
+  font-size: 0.92rem;
+  color: #2D4439;
+}
+.ghi-chu-box {
+  background: #E5F5EC;
+  border: 1px solid #CDEFE0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #2D4439;
+  margin-bottom: 14px;
+}
+.mon-da-dat-wrap {
+  margin-bottom: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed #E3EDE7;
+}
+.mon-da-dat-wrap h4 {
+  font-size: 0.88rem;
+  color: #2D4439;
+  margin-bottom: 6px;
+}
+.nut-huy-don {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nut-huy-don:hover {
+  background: #DC2626;
+  color: #FFFFFF;
+}
+@media (max-width: 600px) {
+  .thong-tin-don {
+    grid-template-columns: 1fr;
+  }
+}

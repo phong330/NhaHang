@@ -1,0 +1,36 @@
+<header id="header-nha-hang">
+  <div class="header-inner">
+    <a routerLink="/" class="logo-nha-hang">
+      🍽️ <span>Phương Nam</span>
+    </a>
+
+    <nav class="nav-links" [class.nav-open]="hienMenu">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="hienMenu=false">Trang chủ</a>
+      <a routerLink="/thuc-don" routerLinkActive="active" (click)="hienMenu=false">Thực đơn</a>
+      <a routerLink="/dat-ban" routerLinkActive="active" (click)="hienMenu=false">Đặt bàn</a>
+    </nav>
+
+    <div class="header-right">
+      <ng-container *ngIf="!nguoiDung">
+        <a routerLink="/dang-nhap" class="nut-dangnhap">Đăng nhập</a>
+      </ng-container>
+
+      <ng-container *ngIf="nguoiDung">
+        <div class="user-box" (click)="hienMenuUser=!hienMenuUser">
+          <span class="avatar-user">{{nguoiDung.hoTen ? nguoiDung.hoTen.charAt(0).toUpperCase() : 'U'}}</span>
+          <span class="ten-user">{{nguoiDung.hoTen || 'Người dùng'}}</span>
+          <span>▾</span>
+
+          <div class="dropdown-user" *ngIf="hienMenuUser">
+            <a routerLink="/lich-su-dat-ban" *ngIf="!auth.laStaffOnly()" (click)="hienMenuUser=false">📋 Lịch sử đặt bàn</a>
+            <a routerLink="/admin" *ngIf="auth.laAdmin()" (click)="hienMenuUser=false">⚙️ Quản trị</a>
+            <a routerLink="/staff" *ngIf="auth.laStaffOnly()" (click)="hienMenuUser=false">🗂️ Nghiệp vụ</a>
+            <button (click)="dangXuat()">🚪 Đăng xuất</button>
+          </div>
+        </div>
+      </ng-container>
+
+      <button class="hamburger" (click)="hienMenu=!hienMenu">☰</button>
+    </div>
+  </div>
+</header>

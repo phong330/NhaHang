@@ -1,0 +1,75 @@
+<div class="trang-lich-su">
+  <div class="hero-lich-su">
+    <h1>Lịch Sử Đặt Bàn</h1>
+    <p style="color:#71847A;margin-top:6px;font-size:1rem;">Theo dõi trạng thái và quản lý các lịch đặt bàn của bạn</p>
+  </div>
+  <div class="container">
+    <div *ngIf="dangTai" class="trang-tai">⏳ Đang tải danh sách đặt bàn...</div>
+
+    <div *ngIf="!dangTai && thongBaoLoi" class="trong-du-lieu">
+      <p>⚠️ {{thongBaoLoi}}</p>
+      <button (click)="taiDuLieu()" class="nut-dat-ngay" style="border:none;cursor:pointer;margin-top:12px;">Thử lại</button>
+    </div>
+
+    <div *ngIf="!dangTai && !thongBaoLoi && dsDon.length === 0" class="trong-du-lieu">
+      <p>📋 Bạn chưa có lịch đặt bàn nào.</p>
+      <a routerLink="/dat-ban" class="nut-dat-ngay">Đặt bàn ngay</a>
+    </div>
+
+    <!-- Thanh cong cu: Bo loc trang thai & Xuat Excel/CSV -->
+    <div class="thanh-dieu-khien-ls" *ngIf="!dangTai && dsDon.length > 0">
+      <div class="nhom-tab-loc">
+        <button class="tab-btn" [class.active]="tabHienTai==='tatca'" (click)="tabHienTai='tatca'">
+          Tất cả ({{dsDon.length}})
+        </button>
+        <button class="tab-btn" [class.active]="tabHienTai==='hoatdong'" (click)="tabHienTai='hoatdong'">
+          🟢 Đang đặt ({{soDonHoatDong}})
+        </button>
+        <button class="tab-btn" [class.active]="tabHienTai==='dahuy'" (click)="tabHienTai='dahuy'">
+          🔴 Đã hủy ({{soDonDaHuy}})
+        </button>
+      </div>
+
+      <div class="nhom-nut-xuat">
+        <button (click)="xuatExcel()" class="nut-xuat-excel" title="Xuất file Excel (.xlsx) chuẩn OpenXML, mở trực tiếp xem ngay không cảnh báo">
+          📊 Xuất Excel ({{dsDonHienThi.length}})
+        </button>
+      </div>
+    </div>
+
+    <!-- Danh sach don -->
+    <div *ngIf="!dangTai && dsDonHienThi.length > 0">
+      <div class="the-don" *ngFor="let don of dsDonHienThi">
+        <div class="don-header">
+          <div>
+            <span class="ma-dat-ban">{{don.maDatBan}}</span>
+            <span [class]="'badge-tt ' + mauTrangThai(don.trangThai)">
+              <span class="tt-dot"></span>
+              {{tenTrangThai(don.trangThai)}}
+            </span>
+          </div>
+          <button class="nut-huy" *ngIf="don.trangThai === 'ChoDuyet'" (click)="huyDon(don.id)">✕ Hủy đặt bàn</button>
+        </div>
+        <div class="don-body">
+          <div class="don-info"><span>🪑</span><span>Bàn: <strong>{{don.tenBan || ('Bàn #' + don.banAnId)}}</strong> ({{don.loaiBan || 'Thường'}})</span></div>
+          <div class="don-info"><span>📅</span><span>Thời gian: <strong>{{dinhDangNgayGio(don.ngayDen)}}</strong></span></div>
+          <div class="don-info"><span>👥</span><span>Số khách: <strong>{{don.soNguoi}} người</strong></span></div>
+          <div class="don-info" *ngIf="don.tienCoc > 0">
+            <span>💰</span>
+            <span>Cọc: <strong>{{formatGia(don.tienCoc)}}</strong>
+              <span [class]="'badge-tt ' + (don.trangThaiCoc === 'DaThanhToan' ? 'da-thanh-toan' : don.trangThaiCoc === 'KhongCanCoc' ? 'khong-can-coc' : 'chua-thanh-toan')" style="margin-left:6px; font-size:0.72rem; padding:2px 8px;">
+                <span class="tt-dot"></span>
+                {{don.trangThaiCoc === 'DaThanhToan' ? 'Đã thanh toán' : don.trangThaiCoc === 'KhongCanCoc' ? 'Không cần cọc' : 'Chờ thanh toán'}}
+              </span>
+            </span>
+          </div>
+          <div class="don-info" *ngIf="don.ghiChu"><span>📝</span><span>Ghi chú: {{don.ghiChu}}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!dangTai && dsDonHienThi.length === 0 && dsDon.length > 0" class="trong-du-lieu">
+      <p>Không có đơn đặt bàn nào trong mục này.</p>
+    </div>
+  </div>
+</div>

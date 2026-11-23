@@ -1,0 +1,218 @@
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="hero-overlay">
+    <div class="hero-noi-dung">
+      <p class="hero-sub">Chào mừng đến với</p>
+      <h1 class="hero-title">Nhà Hàng Phương Nam</h1>
+      <p class="hero-desc">Trải nghiệm ẩm thực đỉnh cao với hương vị Nam Bộ truyền thống<br>trong không gian sang trọng và ấm cúng</p>
+      <div class="hero-btns">
+        <a routerLink="/dat-ban" class="nut-hero-chinh">🍽️ Đặt bàn ngay</a>
+        <a routerLink="/thuc-don" class="nut-hero-phu">📋 Xem thực đơn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GIOI THIEU -->
+<section class="section-gioi-thieu">
+  <div class="container">
+    <div class="tieu-de-section">
+      <h2>Tại sao chọn chúng tôi?</h2>
+      <p>Nhà Hàng Phương Nam - nơi hội tụ hương vị và đẳng cấp</p>
+    </div>
+    <div class="luoi-3-cot">
+      <div class="the-dac-diem">
+        <span class="icon-dac-diem">🏛️</span>
+        <h3>Không gian sang trọng</h3>
+        <p>Thiết kế tinh tế, kết hợp giữa hiện đại và truyền thống Nam Bộ. Phòng VIP riêng biệt, sân vườn thoáng đãng.</p>
+      </div>
+      <div class="the-dac-diem">
+        <span class="icon-dac-diem">👨‍🍳</span>
+        <h3>Bếp trưởng 5 sao</h3>
+        <p>Đội ngũ bếp trưởng giàu kinh nghiệm, được đào tạo bài bản, mang đến những món ăn đẳng cấp nhất.</p>
+      </div>
+      <div class="the-dac-diem">
+        <span class="icon-dac-diem">🌿</span>
+        <h3>Nguyên liệu tươi sạch</h3>
+        <p>100% nguyên liệu tươi sạch, được tuyển chọn kỹ lưỡng từ các nhà cung cấp uy tín mỗi ngày.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MON AN NOI BAT -->
+<section class="section-mon-noi-bat">
+  <div class="container">
+    <div class="tieu-de-section">
+      <h2>Món ăn nổi bật</h2>
+      <p>Những tinh hoa ẩm thực được đánh giá cao nhất</p>
+    </div>
+
+    <div class="luoi-3-cot" *ngIf="dsMonNoiBat.length > 0">
+      <div class="the-mon-an" *ngFor="let mon of dsMonNoiBat">
+        <div class="anh-mon">
+          <img [src]="mon.hinh" [alt]="mon.tenMon" loading="lazy" (error)="$any($event.target).src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'">
+          <span class="badge-danh-muc">{{mon.danhMuc === 'KhaiVi' ? 'Khai vị' : mon.danhMuc === 'MonChinh' ? 'Món chính' : mon.danhMuc === 'HaiSan' ? 'Hải sản' : mon.danhMuc === 'MonChay' ? 'Món chay' : mon.danhMuc === 'TrangMieng' ? 'Tráng miệng' : 'Đồ uống'}}</span>
+        </div>
+        <div class="noi-dung-mon">
+          <h3>{{mon.tenMon}}</h3>
+          <p>{{mon.moTa}}</p>
+          <div class="gia-mon">{{formatGia(mon.gia)}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="xem-them-wrap">
+      <a routerLink="/thuc-don" class="nut-xem-them">Xem toàn bộ thực đơn →</a>
+    </div>
+  </div>
+</section>
+
+<!-- KHONG GIAN BAN AN -->
+<section class="section-khong-gian">
+  <div class="container">
+    <div class="tieu-de-section">
+      <h2>Không gian đặt bàn</h2>
+      <p>Đa dạng không gian phù hợp với mọi nhu cầu</p>
+    </div>
+    <div class="luoi-4-cot">
+      <div class="the-khong-gian">
+        <span class="icon-kg">🪑</span>
+        <h3>Phòng Thường</h3>
+        <p>Không gian ấm cúng, phù hợp 2-6 người. Tiền cọc từ 50.000đ</p>
+        <a routerLink="/dat-ban" class="link-dat-ban">Đặt ngay</a>
+      </div>
+      <div class="the-khong-gian vip">
+        <span class="icon-kg">👑</span>
+        <h3>Phòng VIP</h3>
+        <p>Riêng tư, sang trọng, 6-10 người. Đầy đủ dịch vụ cao cấp.</p>
+        <a routerLink="/dat-ban" class="link-dat-ban">Đặt ngay</a>
+      </div>
+      <div class="the-khong-gian">
+        <span class="icon-kg">🌿</span>
+        <h3>Sân Vườn</h3>
+        <p>Không gian xanh mát, thoáng đãng, 4-6 người. Thưởng thức thiên nhiên.</p>
+        <a routerLink="/dat-ban" class="link-dat-ban">Đặt ngay</a>
+      </div>
+      <div class="the-khong-gian">
+        <span class="icon-kg">⛅</span>
+        <h3>Ngoài Trời</h3>
+        <p>Không gian mở, gần thiên nhiên, 6-8 người. Lý tưởng buổi tối.</p>
+        <a routerLink="/dat-ban" class="link-dat-ban">Đặt ngay</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DAT BAN NHANH -->
+<section class="section-dat-ban-nhanh">
+  <div class="container">
+    <div class="hop-dat-ban-nhanh">
+      <div class="dat-ban-nhanh-text">
+        <h2>Đặt bàn nhanh</h2>
+        <p>Chọn ngày giờ và số khách, chúng tôi sẽ sắp xếp bàn phù hợp nhất cho bạn</p>
+      </div>
+      <div class="form-dat-nhanh">
+        <input type="date" [(ngModel)]="ngayDatNhanh" [min]="ngayHienTai()">
+        <select [(ngModel)]="gioDatNhanh">
+          <option value="10:30">10:30 (Trưa)</option>
+          <option value="11:00">11:00 (Trưa)</option>
+          <option value="11:30">11:30 (Trưa)</option>
+          <option value="12:00">12:00 (Trưa)</option>
+          <option value="12:30">12:30 (Trưa)</option>
+          <option value="13:00">13:00 (Trưa)</option>
+          <option value="17:00">17:00 (Tối)</option>
+          <option value="17:30">17:30 (Tối)</option>
+          <option value="18:00">18:00 (Tối)</option>
+          <option value="18:30">18:30 (Tối)</option>
+          <option value="19:00">19:00 (Tối)</option>
+          <option value="19:30">19:30 (Tối)</option>
+          <option value="20:00">20:00 (Tối)</option>
+          <option value="20:30">20:30 (Tối - Đặt bàn cuối)</option>
+        </select>
+        <input type="number" [(ngModel)]="soNguoiNhanh" min="1" max="20" placeholder="Số người">
+        <button (click)="datBanNhanh()" class="nut-dat-nhanh">Tìm bàn trống</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DANH GIA -->
+<section class="section-danh-gia">
+  <div class="container">
+    <div class="tieu-de-section">
+      <h2>Khách hàng nói gì?</h2>
+      <div class="duong-ke"></div>
+    </div>
+    <div class="luoi-3-cot">
+      <div class="the-danh-gia">
+        <div class="sao">⭐⭐⭐⭐⭐</div>
+        <p>"Không gian tuyệt vời, món ăn ngon, nhân viên phục vụ chuyên nghiệp. Tôi sẽ quay lại!"</p>
+        <div class="ten-khach">— Nguyễn Minh Tuấn</div>
+      </div>
+      <div class="the-danh-gia">
+        <div class="sao">⭐⭐⭐⭐⭐</div>
+        <p>"Đặt bàn online rất tiện, được xác nhận ngay. Phòng VIP rất riêng tư và ấm cúng."</p>
+        <div class="ten-khach">— Trần Thị Lan</div>
+      </div>
+      <div class="the-danh-gia">
+        <div class="sao">⭐⭐⭐⭐☆</div>
+        <p>"Lẩu thái hải sản cực ngon! Sẽ giới thiệu cho bạn bè. Giá cả hợp lý."</p>
+        <div class="ten-khach">— Lê Văn Hùng</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAN DO GOOGLE MAPS - DAI HOC QUY NHON -->
+<section class="section-ban-do">
+  <div class="container">
+    <div class="tieu-de-section">
+      <h2>Tìm chúng tôi ở đâu?</h2>
+      <div class="duong-ke"></div>
+      <p>Nhà Hàng Phương Nam — ngay cạnh Đại học Quy Nhơn, dễ tìm, dễ đến</p>
+    </div>
+    <div class="ban-do-wrapper">
+      <div class="ban-do-info">
+        <h3>🍃 Nhà Hàng Phương Nam</h3>
+        <div class="dia-chi-item">
+          <span class="icon-dc">📍</span>
+          <div class="noi-dung-dc">
+            <strong>Địa chỉ</strong>
+            <span>Gần Đại học Quy Nhơn, 170 An Dương Vương, Quy Nhơn, Bình Định</span>
+          </div>
+        </div>
+        <div class="dia-chi-item">
+          <span class="icon-dc">🕐</span>
+          <div class="noi-dung-dc">
+            <strong>Giờ mở cửa</strong>
+            <span>Thứ 2 – Chủ nhật: 10:00 – 22:00</span>
+          </div>
+        </div>
+        <div class="dia-chi-item">
+          <span class="icon-dc">📞</span>
+          <div class="noi-dung-dc">
+            <strong>Điện thoại đặt bàn</strong>
+            <span>0256 3823 4567</span>
+          </div>
+        </div>
+        <div class="dia-chi-item">
+          <span class="icon-dc">🚗</span>
+          <div class="noi-dung-dc">
+            <strong>Cách di chuyển</strong>
+            <span>Cách cổng chính ĐH Quy Nhơn 200m, bãi đỗ xe rộng rãi</span>
+          </div>
+        </div>
+      </div>
+      <div class="ban-do-iframe">
+        <iframe
+          src="https://maps.google.com/maps?q=170+An+D%C6%B0%C6%A1ng+V%C6%B0%C6%A1ng,+Nguy%E1%BB%85n+V%C4%83n+C%E1%BB%AB,+Quy+Nh%C6%A1n,+B%C3%ACnh+%C4%90%E1%BB%8Bnh&t=&z=17&ie=UTF8&iwloc=&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Vị trí chính xác 170 An Dương Vương - ĐH Quy Nhơn"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>

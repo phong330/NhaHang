@@ -1,0 +1,147 @@
+<div class="trang-thuc-don">
+  <!-- HERO BANNER SANG TRỌNG -->
+  <div class="hero-thuc-don">
+    <div class="hero-content">
+      <span class="hero-subtitle">✨ Tinh hoa ẩm thực Phương Nam</span>
+      <h1>Thực Đơn Nhà Hàng</h1>
+      <p>Khám phá hơn 50 món ăn truyền thống và hải sản cao cấp, được chế biến từ nguồn nguyên liệu tươi ngon nhất mỗi ngày</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- THANH ĐIỀU KHIỂN: TÌM KIẾM & SẮP XẾP -->
+    <div class="thanh-dieu-khien-card">
+      <div class="hang-tim-kiem-sap-xep">
+        <!-- Ô tìm kiếm realtime -->
+        <div class="o-tim-kiem-mon">
+          <span class="icon-kinh-lup">🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="tuKhoaTimKiem" 
+            placeholder="Tìm món ăn theo tên, nguyên liệu, hương vị..." 
+            class="input-tim-kiem"
+          />
+          <button 
+            *ngIf="tuKhoaTimKiem" 
+            (click)="xoaTimKiem()" 
+            class="nut-xoa-tim-kiem"
+            title="Xóa tìm kiếm">✕</button>
+        </div>
+
+        <!-- Bộ lọc sắp xếp giá -->
+        <div class="o-sap-xep-gia">
+          <span class="label-sap-xep">Sắp xếp:</span>
+          <select [(ngModel)]="sapXepGia" class="select-sap-xep">
+            <option value="">-- Mặc định --</option>
+            <option value="tang">Giá tăng dần ⬆</option>
+            <option value="giam">Giá giảm dần ⬇</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tab 6 Danh mục món -->
+      <div class="tab-danh-muc-wrap">
+        <div class="tab-danh-muc">
+          <button *ngFor="let dm of cacDanhMuc"
+            [class.active]="danhMucChon === dm.key"
+            (click)="chonDanhMuc(dm.key)"
+            class="nut-tab-dm">
+            {{dm.ten}}
+          </button>
+        </div>
+      </div>
+
+      <!-- Thanh thống kê số lượng món -->
+      <div *ngIf="!dangTai" class="thanh-thong-ke-mon">
+        <div class="thong-ke-text">
+          Đang hiển thị <strong class="so-luong-hl">{{ dsMonHienThi.length }}</strong> / {{ dsMonAn.length }} món ăn
+          <span *ngIf="tuKhoaTimKiem" class="tu-khoa-hl">
+            (kết quả cho "<em>{{ tuKhoaTimKiem }}</em>")
+          </span>
+        </div>
+        <div class="nut-dat-ban-nhanh-wrap">
+          <a routerLink="/dat-ban" class="nut-dat-ban-nhanh">
+            🪑 Đặt bàn trước ngay →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRẠNG THÁI ĐANG TẢI -->
+    <div *ngIf="dangTai" class="trang-tai-box">
+      <div class="spinner-tai">⏳</div>
+      <p>Đang tải danh sách món ăn từ hệ thống...</p>
+    </div>
+
+    <!-- DANH SÁCH MÓN ĂN -->
+    <div *ngIf="!dangTai">
+      <!-- Trường hợp tìm kiếm rỗng -->
+      <div *ngIf="dsMonHienThi.length === 0" class="trong-du-lieu-card">
+        <div class="trong-icon">🍽️</div>
+        <h3>Không tìm thấy món ăn phù hợp</h3>
+        <p>Vui lòng thử tìm kiếm với từ khóa khác hoặc chuyển sang danh mục món khác.</p>
+        <div class="hang-nut-trong">
+          <button *ngIf="tuKhoaTimKiem" (click)="xoaTimKiem()" class="nut-xoa-tk-chinh">
+            ✕ Xóa từ khóa tìm kiếm
+          </button>
+          <button *ngIf="danhMucChon !== 'TatCa'" (click)="chonDanhMuc('TatCa')" class="nut-tat-ca-mon">
+            🍽️ Xem tất cả món ăn
+          </button>
+        </div>
+      </div>
+
+      <!-- Lưới 3 cột món ăn -->
+      <div class="luoi-mon-an" *ngIf="dsMonHienThi.length > 0">
+        <div class="the-mon" *ngFor="let mon of dsMonHienThi" [class.het-hang]="!mon.conHang">
+          <!-- Ảnh món ăn -->
+          <div class="anh-mon-wrap">
+            <img [src]="mon.hinh || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'" 
+                 [alt]="mon.tenMon" 
+                 loading="lazy" 
+                 (error)="$any($event.target).src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'">
+            
+            <!-- Badge Nổi bật -->
+            <span class="badge-noi-bat" *ngIf="mon.noiBat">⭐ Nổi bật</span>
+            
+            <!-- Badge Hết món -->
+            <span class="badge-het-hang" *ngIf="!mon.conHang">
+              Tạm hết món
+            </span>
+          </div>
+
+          <!-- Nội dung món -->
+          <div class="noi-dung-the-mon">
+            <div class="hang-thong-tin-phu">
+              <span class="badge-dm">{{tenDanhMuc(mon.danhMuc)}}</span>
+              <span *ngIf="mon.conHang" class="badge-con-mon">
+                <span class="dot-xanh"></span> Còn món
+              </span>
+            </div>
+
+            <h3 class="ten-mon" [title]="mon.tenMon">{{mon.tenMon}}</h3>
+            <p class="mo-ta-mon">{{mon.moTa}}</p>
+
+            <!-- Hàng chân thẻ: Giá & Nút đặt bàn -->
+            <div class="hang-chan-mon">
+              <div class="gia-mon">{{formatGia(mon.gia)}}</div>
+              <button 
+                *ngIf="mon.conHang" 
+                (click)="datBanVoiMon(mon)" 
+                class="nut-chon-dat-ban"
+                title="Đặt bàn ngay để thưởng thức món này">
+                Đặt bàn →
+              </button>
+              <button 
+                *ngIf="!mon.conHang" 
+                disabled 
+                class="nut-chon-dat-ban disabled">
+                Tạm hết
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

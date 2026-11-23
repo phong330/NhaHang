@@ -1,0 +1,61 @@
+<section class="trang-auth">
+  <div class="auth-box" [class.mo-dang-ky]="dangMoDangKy">
+
+    <!-- DANG NHAP -->
+    <div class="form-auth dang-nhap">
+      <h2>Đăng nhập</h2>
+      <p class="sub-auth">Chào mừng quay lại Nhà Hàng Phương Nam</p>
+      <form [formGroup]="formDangNhap" (ngSubmit)="dangNhap()">
+        <div class="nhom-input">
+          <input type="email" formControlName="email" placeholder="Email">
+          <span class="loi" *ngIf="formDangNhap.get('email')?.touched && formDangNhap.get('email')?.invalid">Email không hợp lệ</span>
+        </div>
+        <div class="nhom-input">
+          <input type="password" formControlName="matKhau" placeholder="Mật khẩu">
+          <span class="loi" *ngIf="formDangNhap.get('matKhau')?.touched && formDangNhap.get('matKhau')?.invalid">Mật khẩu tối thiểu 6 ký tự</span>
+        </div>
+        <button type="submit" class="nut-auth">Đăng nhập</button>
+      </form>
+      <div class="divider"><span>Hoặc</span></div>
+      <div id="google-btn" style="display:flex;justify-content:center;"></div>
+      <p class="link-chuyen">Chưa có tài khoản? <a href="#" (click)="$event.preventDefault(); dangMoDangKy=true">Đăng ký</a></p>
+    </div>
+
+    <!-- DANG KY -->
+    <div class="form-auth dang-ky">
+      <h2>Đăng ký</h2>
+      <p class="sub-auth">Tạo tài khoản để đặt bàn dễ dàng hơn</p>
+      <form [formGroup]="formDangKy" (ngSubmit)="dangKy()">
+        <div class="nhom-input">
+          <input type="text" formControlName="hoTen" placeholder="Họ và tên">
+          <span class="loi" *ngIf="formDangKy.get('hoTen')?.touched && formDangKy.get('hoTen')?.invalid">Vui lòng nhập họ tên</span>
+        </div>
+        <div class="nhom-input">
+          <input type="email" formControlName="email" placeholder="Email">
+          <span class="loi" *ngIf="formDangKy.get('email')?.touched && formDangKy.get('email')?.invalid">Email không hợp lệ</span>
+        </div>
+        <div class="nhom-input">
+          <input type="tel" formControlName="soDienThoai" placeholder="Số điện thoại (không bắt buộc)">
+        </div>
+        <div class="nhom-input">
+          <input type="password" formControlName="matKhau" placeholder="Mật khẩu (tối thiểu 6 ký tự)">
+          <span class="loi" *ngIf="formDangKy.get('matKhau')?.touched && formDangKy.get('matKhau')?.invalid">Mật khẩu tối thiểu 6 ký tự</span>
+        </div>
+        <button type="submit" class="nut-auth">Đăng ký</button>
+      </form>
+      <p class="link-chuyen">Đã có tài khoản? <a href="#" (click)="$event.preventDefault(); dangMoDangKy=false">Đăng nhập</a></p>
+    </div>
+
+    <!-- PANEL CHAO -->
+    <div class="panel-chao">
+      <div class="panel-dang-nhap" *ngIf="!dangMoDangKy">
+        <h2>Chào mừng!</h2>
+        <p>Đăng nhập để trải nghiệm đặt bàn trực tuyến tiện lợi tại Nhà Hàng Phương Nam</p>
+      </div>
+      <div class="panel-dang-ky" *ngIf="dangMoDangKy">
+        <h2>Đã có tài khoản?</h2>
+        <p>Đăng nhập để quản lý lịch đặt bàn và nhận ưu đãi hấp dẫn</p>
+      </div>
+    </div>
+  </div>
+</section>

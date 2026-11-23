@@ -1,0 +1,379 @@
+<div class="trang-dat-ban">
+  <!-- HERO BANNER SANG TRỌNG -->
+  <div class="hero-dat-ban">
+    <div class="hero-content">
+      <span class="hero-subtitle">✨ Trải nghiệm ẩm thực Phương Nam đẳng cấp</span>
+      <h1>Đặt Bàn Trực Tuyến</h1>
+      <p>Chọn bàn theo khu vực A, B, VIP và đặt món trước chỉ trong 4 bước đơn giản</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- THANH TIẾN TRÌNH 4 BƯỚC (STEPPER NGANG HOÀN HẢO) -->
+    <div class="thanh-tien-trinh-wrap">
+      <div class="thanh-tien-trinh">
+        <!-- Bước 1 -->
+        <div class="buoc-item" [class.active]="buoc >= 1" [class.current]="buoc === 1">
+          <div class="so-buoc">1</div>
+          <span class="ten-buoc">Thời gian & Khách</span>
+        </div>
+        <div class="duong-noi" [class.active]="buoc >= 2"></div>
+
+        <!-- Bước 2 -->
+        <div class="buoc-item" [class.active]="buoc >= 2" [class.current]="buoc === 2">
+          <div class="so-buoc">2</div>
+          <span class="ten-buoc">Chọn bàn ăn</span>
+        </div>
+        <div class="duong-noi" [class.active]="buoc >= 3"></div>
+
+        <!-- Bước 3 -->
+        <div class="buoc-item" [class.active]="buoc >= 3" [class.current]="buoc === 3">
+          <div class="so-buoc">3</div>
+          <span class="ten-buoc">Đặt món trước</span>
+        </div>
+        <div class="duong-noi" [class.active]="buoc >= 4"></div>
+
+        <!-- Bước 4 -->
+        <div class="buoc-item" [class.active]="buoc >= 4" [class.current]="buoc === 4">
+          <div class="so-buoc">4</div>
+          <span class="ten-buoc">Xác nhận & Cọc</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BƯỚC 1: THÔNG TIN ĐẶT BÀN ==================== -->
+    <div *ngIf="buoc === 1" class="hop-buoc">
+      <div class="hop-buoc-header">
+        <div class="header-icon-wrap">📅</div>
+        <div>
+          <h2>Thông tin đặt bàn</h2>
+          <p class="mo-ta-buoc">Chọn ngày, khung giờ đến và số lượng khách để hệ thống gợi ý bàn phù hợp nhất</p>
+        </div>
+      </div>
+
+      <form [formGroup]="formThongTin" class="form-dat-ban">
+        <!-- Lưới 3 cột cân xứng hoàn hảo -->
+        <div class="luoi-form-3cot">
+          <!-- Ngày đến -->
+          <div class="nhom-input">
+            <label class="tieu-de-o">
+              <span>📅 Ngày đến</span>
+              <span class="bat-buoc">*</span>
+            </label>
+            <input type="date" formControlName="ngayDen" class="dinh-dang-input" [min]="ngayHienTai()">
+            <div *ngIf="formThongTin.get('ngayDen')?.touched && formThongTin.get('ngayDen')?.hasError('ngayQuaKhu')" class="thong-bao-loi">
+              ⚠️ Vui lòng chọn ngày từ hôm nay trở đi.
+            </div>
+          </div>
+
+          <!-- Khung giờ -->
+          <div class="nhom-input">
+            <label class="tieu-de-o">
+              <span>⏰ Khung giờ phục vụ</span>
+              <span class="bat-buoc">*</span>
+            </label>
+            <select formControlName="gioDen" class="dinh-dang-input">
+              <option *ngFor="let slot of dsKhungGio" [value]="slot.gio" [disabled]="laGioDaQua(slot.gio)">
+                {{slot.label}} {{laGioDaQua(slot.gio) ? '(Đã qua)' : ''}}
+              </option>
+            </select>
+          </div>
+
+          <!-- Số lượng khách -->
+          <div class="nhom-input">
+            <label class="tieu-de-o">
+              <span>👥 Số lượng khách</span>
+              <span class="tag-phu">(2 - 8 người)</span>
+            </label>
+            <input type="number" formControlName="soNguoi" min="1" max="20" class="dinh-dang-input" placeholder="Nhập số người...">
+            <div *ngIf="formThongTin.get('soNguoi')?.touched && formThongTin.get('soNguoi')?.invalid" class="thong-bao-loi">
+              Vui lòng nhập từ 1 đến 20 khách
+            </div>
+          </div>
+
+          <!-- Ghi chú đặc biệt (Full width) -->
+          <div class="nhom-input full">
+            <label class="tieu-de-o">
+              <span>📝 Ghi chú hoặc yêu cầu đặc biệt</span>
+              <span class="tag-phu">Không bắt buộc</span>
+            </label>
+            <textarea formControlName="ghiChu" rows="3" class="dinh-dang-input textarea-input" placeholder="VD: Cần ghế ăn dặm cho em bé, vị trí bàn cạnh cửa sổ yên tĩnh, tổ chức sinh nhật, dị ứng hải sản..."></textarea>
+          </div>
+        </div>
+
+        <div *ngIf="thongBaoLoi" class="canh-bao-loi">
+          <span class="canh-bao-icon">⚠️</span>
+          <span>{{thongBaoLoi}}</span>
+        </div>
+
+        <div class="hang-nut-gui">
+          <button class="nut-tiep-theo" (click)="timBanTrong()" [disabled]="dangTai">
+            <span *ngIf="!dangTai">🔍 Tìm bàn trống phù hợp →</span>
+            <span *ngIf="dangTai">⏳ Đang tìm bàn phù hợp...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ==================== BƯỚC 2: CHỌN BÀN ĂN (KHU VỰC A, B, VIP) ==================== -->
+    <div *ngIf="buoc === 2" class="hop-buoc">
+      <div class="hop-buoc-header">
+        <div class="header-icon-wrap">🪑</div>
+        <div>
+          <h2>Chọn bàn ăn</h2>
+          <p class="mo-ta-buoc">Tìm thấy <strong>{{dsBanTrong.length}} bàn còn trống</strong> phù hợp với đoàn <strong>{{formThongTin.value.soNguoi}} khách</strong> vào ngày {{formThongTin.value.ngayDen}} lúc {{formThongTin.value.gioDen}}</p>
+        </div>
+      </div>
+
+      <!-- Thanh chọn lọc khu vực hiện đại -->
+      <div class="thanh-loc-khu-vuc">
+        <span class="loc-label">Chọn khu vực:</span>
+        <div class="nhom-nut-khu-vuc">
+          <button *ngFor="let kv of cacKhuVuc"
+            (click)="khuVucLoc = kv.key"
+            [class.active]="khuVucLoc === kv.key"
+            class="nut-pill-khu-vuc">
+            {{ kv.ten }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Không có bàn trống -->
+      <div *ngIf="dsBanTrongHienThi.length === 0" class="trong-du-lieu-box">
+        <div class="trong-icon">😔</div>
+        <h3>Không có bàn trống tại khu vực này</h3>
+        <p>Vui lòng chọn khu vực khác hoặc thay đổi thời gian đến để kiểm tra bàn khả dụng.</p>
+        <button *ngIf="khuVucLoc !== 'TatCa'" (click)="khuVucLoc = 'TatCa'" class="nut-xem-tat-ca-kv">
+          🏛️ Xem tất cả khu vực bàn trống
+        </button>
+      </div>
+
+      <!-- Lưới danh sách bàn ăn -->
+      <div class="luoi-ban" *ngIf="dsBanTrongHienThi.length > 0">
+        <div class="the-ban" *ngFor="let ban of dsBanTrongHienThi" (click)="chonBan(ban)">
+          <div class="anh-ban-wrap">
+            <img [src]="ban.hinh" [alt]="ban.tenBan" loading="lazy" (error)="$any($event.target).src='https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80'">
+            <div class="badge-loai-ban {{ (ban.loai || 'khua').toLowerCase() }}">
+              {{ tenKhuVuc(ban.loai) }}
+            </div>
+            <div class="badge-suc-chua">
+              👥 {{ban.sucChua}} chỗ
+            </div>
+          </div>
+          <div class="noi-dung-ban">
+            <h3>{{ban.tenBan}}</h3>
+            <p class="mo-ta-ban">{{ban.moTa}}</p>
+            <div class="hang-gia-coc">
+              <span class="label-coc">Tiền cọc giữ chỗ:</span>
+              <span class="gia-coc">{{formatGia(ban.tienCoc)}}</span>
+            </div>
+            <button class="nut-chon-ban">Chọn bàn này →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="nhom-nut-dieu-huong">
+        <button class="nut-quay-lai" (click)="quayLai()">← Chọn lại thời gian</button>
+      </div>
+    </div>
+
+    <!-- ==================== BƯỚC 3: ĐẶT MÓN TRƯỚC (6 DANH MỤC) ==================== -->
+    <div *ngIf="buoc === 3" class="hop-buoc">
+      <div class="hop-buoc-header">
+        <div class="header-icon-wrap">🍽️</div>
+        <div>
+          <h2>Đặt món trước (Không bắt buộc)</h2>
+          <p class="mo-ta-buoc">Đặt trước các món đặc sản để đầu bếp chuẩn bị sẵn sàng ngay khi bạn tới nhà hàng</p>
+        </div>
+      </div>
+
+      <!-- Thanh tìm kiếm & lọc 6 danh mục -->
+      <div class="thanh-tim-kiem-mon-wrap">
+        <div class="o-tim-kiem-mon">
+          <span>🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="tuKhoaMonDat" 
+            placeholder="Tìm món ăn theo tên hoặc nguyên liệu..." 
+          />
+          <button *ngIf="tuKhoaMonDat" (click)="tuKhoaMonDat=''" class="nut-xoa-tk">✕</button>
+        </div>
+
+        <div class="danh-sach-tabs-mon">
+          <button *ngFor="let dm of cacDanhMucMon"
+            (click)="danhMucMonDat = dm.key"
+            [class.active]="danhMucMonDat === dm.key"
+            class="tab-mon-item">
+            {{ dm.ten }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Danh sách món ăn đặt trước -->
+      <div class="luoi-mon-chon" *ngIf="dsMonDatHienThi.length > 0">
+        <div class="the-mon-chon" *ngFor="let mon of dsMonDatHienThi">
+          <img [src]="mon.hinh" [alt]="mon.tenMon" loading="lazy" (error)="$any($event.target).src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'">
+          <div class="tt-mon-chon">
+            <div class="hang-badge-mon">
+              <span class="badge-dm-nho">{{tenDanhMuc(mon.danhMuc)}}</span>
+              <span *ngIf="mon.noiBat" class="badge-star">⭐ Nổi bật</span>
+            </div>
+            <h4>{{mon.tenMon}}</h4>
+            <div class="gia-mon-nho">{{formatGia(mon.gia)}}</div>
+          </div>
+          <div class="dieu-chinh-sl">
+            <button (click)="giamMon(mon)" [disabled]="soLuongMon(mon) === 0" title="Giảm số lượng">−</button>
+            <span class="so-luong-hien-tai">{{soLuongMon(mon)}}</span>
+            <button (click)="tangMon(mon)" title="Thêm món">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="dsMonDatHienThi.length === 0" class="trong-du-lieu-box" style="padding: 30px;">
+        <p>Không tìm thấy món ăn nào trong danh mục này.</p>
+      </div>
+
+      <!-- Hộp tổng kết món đã chọn -->
+      <div class="tong-mon-chon-card" *ngIf="monDaChon.length > 0">
+        <div class="tong-mon-left">
+          <span class="tong-icon">🛒</span>
+          <div>
+            <strong>Đã chọn {{monDaChon.length}} loại món</strong>
+            <span class="tong-phu"> (Nhà hàng sẽ chuẩn bị trước cho bạn)</span>
+          </div>
+        </div>
+        <div class="tong-mon-right">
+          Tổng tiền món: <strong class="gia-tong-mon">{{formatGia(tongTienMon())}}</strong>
+        </div>
+      </div>
+
+      <div class="nhom-nut-dieu-huong">
+        <button class="nut-quay-lai" (click)="quayLai()">← Chọn lại bàn</button>
+        <button class="nut-tiep-theo" (click)="buoc = 4">
+          Tiếp tục sang Xác nhận →
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== BƯỚC 4: XÁC NHẬN & THANH TOÁN ==================== -->
+    <div *ngIf="buoc === 4" class="hop-buoc">
+      <div class="hop-buoc-header">
+        <div class="header-icon-wrap">✅</div>
+        <div>
+          <h2>Xác nhận đặt bàn</h2>
+          <p class="mo-ta-buoc">Kiểm tra lại toàn bộ thông tin đặt chỗ và lựa chọn phương thức thanh toán</p>
+        </div>
+      </div>
+
+      <!-- Hộp tóm tắt đặt bàn phong cách hóa đơn cao cấp -->
+      <div class="hop-tom-tat-card">
+        <div class="hoa-don-header">
+          <h3>HÓA ĐƠN ĐẶT CHỖ</h3>
+          <span class="nha-hang-badge">Nhà Hàng Phương Nam</span>
+        </div>
+
+        <table class="bang-tom-tat">
+          <tr>
+            <td class="cot-tieu-de">📅 Thời gian đến:</td>
+            <td class="cot-gia-tri highlight-time"><strong>{{formThongTin.value.ngayDen}} lúc {{formThongTin.value.gioDen}}</strong></td>
+          </tr>
+          <tr>
+            <td class="cot-tieu-de">👥 Số lượng khách:</td>
+            <td class="cot-gia-tri"><strong>{{formThongTin.value.soNguoi}} khách</strong></td>
+          </tr>
+          <tr>
+            <td class="cot-tieu-de">🪑 Bàn đã chọn:</td>
+            <td class="cot-gia-tri">
+              <strong class="ten-ban-chon">{{banDaChon?.tenBan}}</strong>
+              <span class="tag-khu-vuc">{{tenKhuVuc(banDaChon?.loai || '')}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="cot-tieu-de">💰 Tiền cọc bàn:</td>
+            <td class="cot-gia-tri"><strong class="tien-coc-value">{{formatGia(tienCoc())}}</strong></td>
+          </tr>
+          <tr *ngIf="formThongTin.value.ghiChu">
+            <td class="cot-tieu-de">📝 Ghi chú:</td>
+            <td class="cot-gia-tri">{{formThongTin.value.ghiChu}}</td>
+          </tr>
+          <tr *ngIf="monDaChon.length > 0">
+            <td class="cot-tieu-de">🍽️ Món đặt trước:</td>
+            <td class="cot-gia-tri"><strong>{{monDaChon.length}} loại món — Tổng tiền món: {{formatGia(tongTienMon())}}</strong></td>
+          </tr>
+        </table>
+
+        <!-- Danh sách chi tiết món đặt trước nếu có -->
+        <div *ngIf="monDaChon.length > 0" class="ds-mon-chi-tiet">
+          <div class="chi-tiet-title">Danh sách món ăn chuẩn bị trước:</div>
+          <div *ngFor="let x of monDaChon" class="dong-mon-item">
+            <span class="ten-mon-sl">{{x.mon.tenMon}} <span class="so-luong-badge">×{{x.soLuong}}</span></span>
+            <span class="thanh-tien-mon">{{formatGia(x.mon.gia * x.soLuong)}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chọn phương thức thanh toán cọc -->
+      <div class="chon-thanh-toan-wrap">
+        <h3>Phương thức thanh toán tiền cọc</h3>
+        <div class="ds-phuong-thuc-grid">
+          <!-- Phương thức 1: Thanh toán tại nhà hàng -->
+          <label class="phuong-thuc-card" [class.active]="phuongThucThanhToan==='taiquan'">
+            <input type="radio" [(ngModel)]="phuongThucThanhToan" value="taiquan">
+            <div class="pt-icon-wrap">💵</div>
+            <div class="pt-info">
+              <strong>Thanh toán tại nhà hàng</strong>
+              <p>Không cần thanh toán trước. Nhà hàng sẽ liên hệ qua điện thoại để xác nhận đơn đặt bàn của bạn.</p>
+            </div>
+            <div class="pt-check">✓</div>
+          </label>
+
+          <!-- Phương thức 2: Chuyển khoản VietQR -->
+          <label class="phuong-thuc-card" [class.active]="phuongThucThanhToan==='qr'">
+            <input type="radio" [(ngModel)]="phuongThucThanhToan" value="qr">
+            <div class="pt-icon-wrap">📱</div>
+            <div class="pt-info">
+              <strong>Chuyển khoản VietQR tức thì</strong>
+              <p>Quét mã VietQR qua bất kỳ ứng dụng ngân hàng nào. Cọc <strong>{{formatGia(tienCoc())}}</strong> để giữ bàn chắc chắn 100%.</p>
+            </div>
+            <div class="pt-check">✓</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="nhom-nut-dieu-huong">
+        <button class="nut-quay-lai" (click)="quayLai()">← Quay lại</button>
+        <button class="nut-xac-nhan" (click)="xacNhanDatBan()" [disabled]="dangTai">
+          <span *ngIf="!dangTai">🎉 Xác nhận đặt bàn ngay</span>
+          <span *ngIf="dangTai">⏳ Đang xử lý...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- POPUP QR CHUYỂN KHOẢN -->
+    <div class="overlay-qr" *ngIf="hienQR" (click)="hienQR=false">
+      <div class="popup-qr" (click)="$event.stopPropagation()">
+        <div class="popup-qr-header">
+          <h3>📱 Quét mã VietQR để thanh toán</h3>
+          <p>Mở ứng dụng ngân hàng hoặc ví điện tử để quét mã chuyển tiền</p>
+        </div>
+
+        <div class="qr-img-box">
+          <img [src]="thongTinQR?.qrUrl" alt="QR Code" class="qr-img">
+        </div>
+
+        <div class="tt-chuyen-khoan-card">
+          <div class="dong-tk"><span>Ngân hàng:</span><strong>{{thongTinQR?.nganHang}}</strong></div>
+          <div class="dong-tk"><span>Số tài khoản:</span><strong class="so-tk-hl">{{thongTinQR?.soTaiKhoan}}</strong></div>
+          <div class="dong-tk"><span>Chủ tài khoản:</span><strong>{{thongTinQR?.chuTaiKhoan}}</strong></div>
+          <div class="dong-tk"><span>Số tiền cọc:</span><strong class="so-tien-hl">{{formatGia(thongTinQR?.soTien)}}</strong></div>
+          <div class="dong-tk"><span>Nội dung chuyển:</span><strong class="noi-dung-hl">{{thongTinQR?.noiDung}}</strong></div>
+        </div>
+
+        <button class="nut-dong-qr" (click)="hienQR=false; router.navigate(['/lich-su-dat-ban'])">
+          ✅ Tôi đã hoàn tất chuyển khoản
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
